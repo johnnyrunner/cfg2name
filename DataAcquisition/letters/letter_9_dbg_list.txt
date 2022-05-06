@@ -1,0 +1,4 @@
+9base-dbgsym
+9menu-dbgsym
+9mount-dbgsym
+9wm-dbgsym

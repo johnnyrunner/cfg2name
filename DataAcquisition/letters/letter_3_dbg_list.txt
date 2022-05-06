@@ -1,0 +1,5 @@
+3270-common-dbgsym
+389-ds-base-dbgsym
+389-ds-base-libs-dbgsym
+3dchess-dbgsym
+3depict-dbgsym

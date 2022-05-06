@@ -1,0 +1,4 @@
+4g8-dbgsym
+4pane-dbgsym
+4store-dbgsym
+4ti2-dbgsym

@@ -1,0 +1,44 @@
+#sed -i 's/\r//g' download_file_and_dbg
+#grep ^Package /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_focal*_Packages | awk '{print $2}' | sort -u | grep 'dbg'
+# /mnt/c/USERS/User/Desktop/Thesis/routinio2/DataAcquisition/ida_scripts
+# https://stackoverflow.com/questions/34293646/how-to-add-debug-symbols-to-stripped-elf-binaries
+
+original_path=$(pwd)
+
+name_wo_dbg=$1
+echo $name_wo_dbg
+name_w_dbg=$1-dbg
+name_w_dbgsym=$1-dbgsym
+echo $name_w_dbg
+echo $name_w_dbgsym
+data_path=/mnt/d/routinio_data/data/apt_related
+results_path=/mnt/d/routinio_data/data
+dest_path=$data_path/apt-debs/$name_wo_dbg
+archive_path=$data_path/apt-archive
+
+mkdir $data_path
+mkdir $data_path/apt-debs
+mkdir $dest_path
+mkdir $archive_path
+
+# Download the package, clean all dependencies from folder
+sudo apt-get -y --download-only -o Dir::Cache=$dest_path \
+-o Dir::Cache::archives=$archive_path install $name_wo_dbg
+sudo apt-get -y --download-only -o Dir::Cache=$dest_path \
+-o Dir::Cache::archives=$archive_path install $name_w_dbg
+sudo apt-get -y --download-only -o Dir::Cache=$dest_path \
+-o Dir::Cache::archives=$archive_path install $name_w_dbgsym
+
+cd $dest_path
+rm *
+cp $archive_path/$name_wo_dbg* .
+
+# Extract all code from deb files
+for file in *; do
+    if [ -f "$file" ]; then
+        dpkg-deb -xv $file .
+    fi
+done
+
+cd $original_path
+/home/johnny/anaconda3/bin/python add_symbols_to_binaries_in_extracted_deb_folder.py $dest_path $results_path true

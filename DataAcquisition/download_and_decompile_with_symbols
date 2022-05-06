@@ -1,0 +1,57 @@
+# ls /var/lib/apt/lists/*_Packages
+# grep ^Package /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_focal*_Packages | awk '{print $2}' | sort -u
+
+dbg_libs = grep ^Package /var/lib/apt/lists/ddebs.ubuntu.com_dists_foca*_Packages | awk '{print $2}' | sort -u | grep 'dbgsym'
+
+for name_with_dbg in range(dbg_libs):
+    name_wo_dbg = name_with_dbg[:-7]
+    cd working_directory
+    dest_path = '/path/to/destination/dir/'
+    sudo apt-get --download-only -o Dir::Cache=f"{dest_path}{name_wo_dbg}" \
+    -o Dir::Cache::archives=f"./" install name_wo_dbg
+    sudo apt-get --download-only -o Dir::Cache=f"{dest_path}{name_with_dbg}" \
+    -o Dir::Cache::archives="./" install name_with_dbg
+
+    cd dest_path
+    for file in .:
+        dpkg-deb -xv file .
+        dpkg-deb -xv file .
+
+    for file_name in dest_path/usr/lib/debug/.build_id
+        if file_extension == .debug:
+            ida open dest_path/usr/lib/debug/
+            ida save database to idc named dest_path/file.idc
+            comment out delete_all_segments
+    ida open usr/bin/name_wo_dbg
+    alt + f7 al the .idc files into it.
+
+    sudo apt-get purge name_wo_dbg
+    sudo apt-get purge name_with_dbg
+
+
+dbg_libs = grep ^Package /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_focal*_Packages | awk '{print $2}' | sort -u | grep 'dbg'
+
+for name_with_dbg in range(dbg_libs):
+    name_wo_dbg = name_with_dbg[:-4]
+    cd working_directory
+    dest_path = '/path/to/destination/dir/'
+    sudo apt-get --download-only -o Dir::Cache=f"{dest_path}{name_wo_dbg}" \
+    -o Dir::Cache::archives=f"./" install name_wo_dbg
+    sudo apt-get --download-only -o Dir::Cache=f"{dest_path}{name_with_dbg}" \
+    -o Dir::Cache::archives="./" install name_with_dbg
+
+    cd dest_path
+    for file in .:
+        dpkg-deb -xv file .
+        dpkg-deb -xv file .
+
+    for file_name in dest_path/usr/lib/debug/.build_id
+        if file_extension == .debug:
+            ida open dest_path/usr/lib/debug/
+            ida save database to idc named dest_path/file.idc
+            comment out delete_all_segments
+    ida open usr/bin/name_wo_dbg
+    alt + f7 al the .idc files into it.
+
+    sudo apt-get purge name_wo_dbg
+    sudo apt-get purge name_with_dbg

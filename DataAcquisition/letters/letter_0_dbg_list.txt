@@ -1,0 +1,4 @@
+0ad-dbgsym
+0install-core-dbgsym
+0install-dbgsym
+0xffff-dbgsym
